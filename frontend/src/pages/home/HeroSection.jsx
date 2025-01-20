@@ -37,7 +37,7 @@ const HeroSection = () => {
                         <a href="#">Discover More</a>
                     </div>
                 </div>
-            ))
+            )) 
         }
     </section>
   )
