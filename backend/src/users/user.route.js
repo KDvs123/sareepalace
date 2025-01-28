@@ -1,5 +1,5 @@
 const express = require('express');
-const user = require('./user.model')
+const User = require('./user.model')
 
 const router = express.Router();
 
@@ -14,13 +14,37 @@ router.post('/register', async (req, res) => {
         
 
     }catch (error){
+        console.error('Error registering user', error);
+        res.status(500).send({message: 'Error registering user'});
 
     }
 })
 
-router.get("/", async (req, res) => {
-    res.send("Registation routes");
+// login user endpoint
 
+router.post('/login' , async (req, res) => {
+    const {email , password} = req.body;
+    try{
+        const user = await User.findOne({email})
+    if(!user)
+    {
+        return res.status(404).send({message: 'Invalid email'})
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if(!isMatch)
+    {
+        return res.status(404).send({message: 'Invalid  password'})
+    }
+
+    res.status(200).send({ message: "Logged in successfully" , user})
+    }catch(error)
+    {
+        console.error("Error logged in user", error);
+        res.status(500).send({message: "Error logged in user"})
+    }
 })
+
+
 
 module.exports = router;
